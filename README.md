@@ -19,7 +19,16 @@ It is designed for CloudOps/SRE workflows where you need to:
 - **Safe and idempotent** — re-runs won’t duplicate resources
 - **Works with AWS Backup snapshots** (e.g. `awsbackup:job-xxxxx`)
 
+
 ---
 
-## 🧱 Architecture Overview
+## ⚙️ Prerequisites
+
+### 1️⃣ Install required tools
+```bash
+brew install ansible awscli mysql
+pip3 install boto3 botocore
+
+### 2️⃣ Install Ansible AWS collections
+ansible-galaxy collection install -r collections/requirements.yml
 
