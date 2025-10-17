@@ -5,6 +5,10 @@
     region: "{{ region }}"
   register: source_rds
 
+- name: Debug RDS info structure
+  debug:
+    var: rds_info.db_instances[0]
+
 - name: Set RDS configuration facts
   set_fact:
     db_instance_class: "{{ source_rds.instances[0].db_instance_class }}"
