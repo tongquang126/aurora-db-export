@@ -1,0 +1,19 @@
+---
+# roles/secrets_get/tasks/main.yml
+# Purpose: Retrieve DB credentials securely from AWS Secrets Manager
+#          and expose them as db_user and db_pass facts.
+
+- name: Retrieve DB credentials from AWS Secrets Manager
+  ansible.builtin.set_fact:
+    secret_value: "{{ lookup('amazon.aws.secretsmanager_secret', secret_name, region=region) | from_json }}"
+
+- name: Set DB username and password as facts
+  ansible.builtin.set_fact:
+    db_user: "{{ secret_value.username }}"
+    db_pass: "{{ secret_value.password }}"
+
+- name: Debug DB credentials (optional)
+  ansible.builtin.debug:
+    msg:
+      - "Retrieved DB credentials for user {{ db_user }}"
+  no_log: true   # hide sensitive info in logs

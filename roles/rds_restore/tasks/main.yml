@@ -7,6 +7,8 @@
   register: restored_exists
   failed_when: false
 
+  
+
 - name: Restore RDS instance from snapshot
   amazon.aws.rds_instance:
     db_instance_identifier: "{{ restored_db_identifier }}"
@@ -47,4 +49,4 @@
     restored_endpoint: "{{ restored_info.instances[0].endpoint.address }}"
 
 - debug:
-    msg: "✅ Restored DB endpoint: {{ restored_endpoint }}"
+    msg: "Restored DB endpoint: {{ restored_endpoint }}"
