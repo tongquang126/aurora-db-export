@@ -1,0 +1,12 @@
+---
+- name: Upload DB backup to S3
+  amazon.aws.s3_object:
+    bucket: "{{ s3_bucket }}"
+    object: "backups/{{ database_name }}_{{ lookup('pipe', 'date +%F-%H%M') }}.sql"
+    src: "{{ backup_file_path }}"
+    mode: put
+    region: "{{ region }}"
+  register: s3_result
+
+- debug:
+    msg: "Backup uploaded to s3://{{ s3_bucket }}/{{ s3_result.object.key }}"

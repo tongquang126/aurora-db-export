@@ -1,0 +1,24 @@
+---
+- name: Get source RDS configuration
+  amazon.aws.rds_instance_info:
+    db_instance_identifier: "{{ source_db_identifier }}"
+    region: "{{ region }}"
+  register: source_rds
+
+- name: Set RDS configuration facts
+  set_fact:
+    db_instance_class: "{{ source_rds.instances[0].db_instance_class }}"
+    subnet_group_name: "{{ source_rds.instances[0].db_subnet_group_name }}"
+    vpc_security_groups: "{{ source_rds.instances[0].vpc_security_groups | map(attribute='vpc_security_group_id') | list }}"
+    publicly_accessible: "{{ source_rds.instances[0].publicly_accessible }}"
+    engine: "{{ source_rds.instances[0].engine }}"
+    engine_version: "{{ source_rds.instances[0].engine_version }}"
+    storage_type: "{{ source_rds.instances[0].storage_type }}"
+    allocated_storage: "{{ source_rds.instances[0].allocated_storage }}"
+
+- debug:
+    msg:
+      - "RDS class: {{ db_instance_class }}"
+      - "Subnet group: {{ subnet_group_name }}"
+      - "SGs: {{ vpc_security_groups }}"
+      - "Engine: {{ engine }} v{{ engine_version }}"

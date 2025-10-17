@@ -1,0 +1,22 @@
+---
+- name: Ensure MySQL client is installed
+  ansible.builtin.package:
+    name: mariadb105
+    state: present
+
+- name: Dump database {{ database_name }}
+  ansible.builtin.shell: >
+    mysqldump -h {{ restored_endpoint }}
+               -u {{ db_user }}
+               -p{{ db_pass }}
+               {{ database_name }} > {{ backup_file_path }}
+  args:
+    creates: "{{ backup_file_path }}"
+
+- name: Check backup file size
+  ansible.builtin.stat:
+    path: "{{ backup_file_path }}"
+  register: backup_stat
+
+- debug:
+    msg: "Backup file size: {{ backup_stat.stat.size | default(0) }} bytes"

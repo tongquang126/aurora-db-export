@@ -1,0 +1,11 @@
+---
+- name: Delete temporary restored RDS instance
+  amazon.aws.rds_instance:
+    db_instance_identifier: "{{ restored_db_identifier }}"
+    skip_final_snapshot: true
+    state: absent
+    region: "{{ region }}"
+    wait: yes
+
+- debug:
+    msg: "Temporary RDS instance {{ restored_db_identifier }} deleted successfully."

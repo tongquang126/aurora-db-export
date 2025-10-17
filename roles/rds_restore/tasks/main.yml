@@ -1,0 +1,27 @@
+---
+- name: Restore RDS instance from snapshot
+  amazon.aws.rds_instance:
+    db_instance_identifier: "{{ restored_db_identifier }}"
+    db_snapshot_identifier: "{{ snapshot_identifier }}"
+    db_instance_class: "{{ db_instance_class }}"
+    db_subnet_group_name: "{{ subnet_group_name }}"
+    vpc_security_groups: "{{ vpc_security_groups }}"
+    publicly_accessible: "{{ publicly_accessible }}"
+    engine: "{{ engine }}"
+    engine_version: "{{ engine_version }}"
+    allocated_storage: "{{ allocated_storage }}"
+    region: "{{ region }}"
+    wait: yes
+    state: present
+
+- name: Get endpoint of restored RDS instance
+  amazon.aws.rds_instance_info:
+    db_instance_identifier: "{{ restored_db_identifier }}"
+    region: "{{ region }}"
+  register: restored_info
+
+- set_fact:
+    restored_endpoint: "{{ restored_info.instances[0].endpoint.address }}"
+
+- debug:
+    msg: "Restored DB endpoint: {{ restored_endpoint }}"
