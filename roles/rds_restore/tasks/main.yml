@@ -18,6 +18,8 @@
     engine: "{{ engine }}"
     engine_version: "{{ engine_version }}"
     allocated_storage: "{{ allocated_storage }}"
+    master_username: "{{ db_user }}"
+    master_user_password: "{{ db_pass }}"
     region: "{{ region }}"
     wait: yes
     state: present
