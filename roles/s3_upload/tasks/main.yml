@@ -9,4 +9,5 @@
   register: s3_result
 
 - debug:
-    msg: "Backup uploaded to s3://{{ s3_bucket }}/{{ s3_result.object.key }}"
+    msg: "Backup uploaded to s3://{{ s3_bucket }}/{{ s3_result.key }}"
+
