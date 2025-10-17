@@ -11,10 +11,7 @@
 
 - name: Dump database {{ database_name }}
   ansible.builtin.shell: >
-    mysqldump -h {{ restored_endpoint }}
-               -u {{ db_user }}
-               -p{{ db_pass }}
-               {{ database_name }} > {{ backup_file_path }}
+    mysqldump -h {{ restored_endpoint }} -u {{ db_user }} -p{{ db_pass }} {{ database_name }} > {{ backup_file_path }}
   args:
     creates: "{{ backup_file_path }}"
 
