@@ -1,0 +1,13 @@
+
+region: us-east-1
+
+# RDS info
+source_db_identifier: webdatabase
+snapshot_identifier: webdatabase-snapshot-2025-10-17
+restored_db_identifier: webdatabase-backup-temp
+database_name: testdb
+
+# Secret & S3
+secret_name: prod/webapp/rds
+s3_bucket: bucket4databackup
+backup_file_path: /tmp/testdb_backup.sql
