@@ -8,6 +8,12 @@
     region: "{{ region }}"
   register: s3_result
 
-- debug:
-    msg: "Backup uploaded to s3://{{ s3_bucket }}/{{ s3_result.key }}"
+- name: Ensure S3 upload succeeded
+  fail:
+    msg: "S3 upload failed: {{ s3_result.msg }}"
+  when: s3_result.failed | default(false)
 
+- name: Debug S3 upload result
+  debug:
+    msg: >
+      ✅ Backup uploaded to s3://{{ s3_bucket }}/{{ s3_result.key | default(s3_result.object | default('unknown_path')) }}
