@@ -1,5 +1,6 @@
 ---
 - name: Ensure MySQL client is installed
+  become: true
   ansible.builtin.package:
     name: mariadb105
     state: present
