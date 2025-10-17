@@ -1,0 +1,9 @@
+# Python virtual environment
+.venv/
+
+# Optional: Bytecode and cache files
+__pycache__/
+*.pyc
+
+# macOS junk
+.DS_Store
