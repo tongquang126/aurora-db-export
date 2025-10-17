@@ -1,4 +1,12 @@
 ---
+# roles/rds_teardown/tasks/main.yml
+- name: Verify instance exists before deletion
+  amazon.aws.rds_instance_info:
+    db_instance_identifier: "{{ restored_db_identifier }}"
+    region: "{{ region }}"
+  register: teardown_check
+  failed_when: false
+
 - name: Delete temporary restored RDS instance
   amazon.aws.rds_instance:
     db_instance_identifier: "{{ restored_db_identifier }}"
@@ -6,6 +14,7 @@
     state: absent
     region: "{{ region }}"
     wait: yes
+  when: teardown_check.instances | length > 0
 
 - debug:
-    msg: "Temporary RDS instance {{ restored_db_identifier }} deleted successfully."
+    msg: "🗑️ Temporary RDS instance {{ restored_db_identifier }} deleted successfully."
