@@ -18,20 +18,25 @@
       import_role:
         name: rds_get_config
       tags: [discover] 
+   # STEP 2: Retrive the credentials of DB from Secrets Manager
+    - name: Retrive the credentials of DB from Secrets Manager
+      import_role:
+        name: secrets_get
+      tags: [credentials]
 
-    # STEP 2: Restore snapshot 
+    # STEP 3: Restore snapshot 
     - name: Restore snapshot
       import_role:
         name: rds_restore
       tags: [restore]
 
-    # STEP 3: Dump target DB and upload to S3
+    # STEP 4: Dump target DB and upload to S3
     - name: Dump database and upload to S3
       import_role:
         name: rds_dump
       tags: [dump]
   
-    # STEP 4: Upload to S3
+    # STEP 5: Upload to S3
     - name: Upload DB backup to S3
       import_role:
         name: s3_upload
