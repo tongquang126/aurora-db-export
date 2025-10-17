@@ -1,14 +1,12 @@
 ---
-# This is the entry point playbook.
-# It orchestrates the steps: discover snapshot → restore cluster → create instance
-# → dump & upload → cleanup
+# Main orchestration playbook: snapshot → restore → dump → upload → teardown
 
 - name: Export one DB from Aurora snapshot to S3
   hosts: localhost
   connection: local
   gather_facts: no
   vars_files:
-      - ../group_vars/all.yml
+    - ../group_vars/all.yml
   collections:
     - amazon.aws
 
@@ -17,7 +15,7 @@
     - name: Discover snapshot metadata and generate names
       import_role:
         name: rds_get_config
-      tags: [discover] 
+      tags: [discover]
 
     # STEP 2: Retrieve the credentials of DB from Secrets Manager
     - name: Retrieve the credentials of DB from Secrets Manager
@@ -25,7 +23,7 @@
         name: secrets_get
       tags: [credentials]
 
-    # STEP 3: Restore snapshot 
+    # STEP 3: Restore snapshot
     - name: Restore snapshot
       import_role:
         name: rds_restore
@@ -36,14 +34,14 @@
       import_role:
         name: rds_dump
       tags: [dump]
-  
+
     # STEP 5: Upload to S3
     - name: Upload DB backup to S3
       import_role:
         name: s3_upload
       tags: [upload]
 
-    # STEP 5: Teardown temporary resources
+    # STEP 6: Teardown temporary resources
     - name: Delete temporary RDS instance
       import_role:
         name: rds_teardown
