@@ -18,6 +18,7 @@
       import_role:
         name: rds_get_config
       tags: [discover] 
+
    # STEP 2: Retrive the credentials of DB from Secrets Manager
     - name: Retrive the credentials of DB from Secrets Manager
       import_role:
