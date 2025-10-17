@@ -1,9 +1,13 @@
 ---
-- name: Ensure MySQL client is installed
+- name: Gather package facts
+  ansible.builtin.package_facts:
+
+- name: Install MySQL client if not present
   become: true
   ansible.builtin.package:
-    name: mariadb105
+    name: mysql-community-client
     state: present
+  when: "'mysql-community-client' not in ansible_facts.packages"
 
 - name: Dump database {{ database_name }}
   ansible.builtin.shell: >
