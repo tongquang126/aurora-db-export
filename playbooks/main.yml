@@ -7,6 +7,8 @@
   hosts: localhost
   connection: local
   gather_facts: no
+  vars_files:
+      - ../group_vars/all.yml
   collections:
     - amazon.aws
 
