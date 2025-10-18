@@ -6,6 +6,7 @@ It’s designed for **CloudOps / SRE** workflows where you need to quickly resto
 # Workflow Overview
 The Ansible playbook orchestrates the following steps:
 - Discover snapshot metadata (via AWS APIs).
+- Retrieve database credentials from AWS Secrets Manager.
 - Restore an Aurora RDS cluster or instance from a given AWS Backup snapshot.
 - Create a temporary writer DB instance.
 - Dump a specific MySQL database via mysqldump.
@@ -15,23 +16,26 @@ The Ansible playbook orchestrates the following steps:
 ## Architecture 
 ```pgsql
 [ Ansible Control Node (EC2 w/ IAM Role) ]
-             │
-             │ AWS API (boto3 / amazon.aws collection)
-             ▼
-+-----------------------------------+
-|     AWS RDS / Aurora Snapshot     |
-+-----------------------------------+
-             │
-             ▼
-+-----------------------------------+
-| Restored AWS RDS + Writer  |
-|  → mysqldump one DB → upload S3   |
-+-----------------------------------+
-             │
-             ▼
-+-----------------------------------+
-|    Amazon S3 (DB backups)         |
-+-----------------------------------+
+                │
+                │ AWS API calls (boto3 via amazon.aws collection)
+                ▼
++------------------------------------------------------------+
+|                  AWS RDS / Aurora Snapshot                 |
++------------------------------------------------------------+
+                │
+                ▼
++------------------------------------------------------------+
+| Restored Aurora Cluster  ──► Temporary Writer Instance     |
+|  │                                                           
+|  ├─ Retrieve credentials from AWS Secrets Manager           
+|  ├─ mysqldump target DB → local /tmp/testdb_backup.sql      
+|  └─ Upload to S3 bucket: s3://bucket4databackup/            |
++------------------------------------------------------------+
+                │
+                ▼
++------------------------------------------------------------+
+|             Cleanup (delete temp instance & cluster)        |
++------------------------------------------------------------+
 ```
 
 ## ⚙️ Prerequisites
